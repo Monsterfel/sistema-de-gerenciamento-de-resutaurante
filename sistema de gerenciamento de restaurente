@@ -1,0 +1,70 @@
+SET SQL_SAFE_UPDATES = 0;
+CREATE DATABASE Restaurante;
+
+-- Uso do banco de dados
+USE Restaurante;
+
+-- Criação da tabela Clientes
+CREATE TABLE Clientes (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Nome VARCHAR(100) NOT NULL,
+    Telefone VARCHAR(15)
+);
+
+-- Criação da tabela Mesas
+CREATE TABLE Mesas (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Numero INT NOT NULL,
+    Capacidade INT NOT NULL
+);
+
+-- Criação da tabela Pedidos
+CREATE TABLE Pedidos (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    ClienteID INT,
+    MesaID INT,
+    DataPedido DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Total DECIMAL(10, 2),
+    FOREIGN KEY (ClienteID) REFERENCES Clientes(ID),
+    FOREIGN KEY (MesaID) REFERENCES Mesas(ID)
+);
+
+-- Inserção de dados na tabela Clientes
+INSERT INTO Clientes (Nome, Telefone) VALUES
+('Maria Souza', '1234-5678'),
+('João Silva', '9876-5432');
+
+-- Inserção de dados na tabela Mesas
+INSERT INTO Mesas (Numero, Capacidade) VALUES
+(1, 4),
+(2, 2),
+(3, 6);
+
+-- Inserção de dados na tabela Pedidos
+INSERT INTO Pedidos (ClienteID, MesaID, Total) VALUES
+(1, 1, 150.00),  -- Pedido de Maria Souza na Mesa 1
+(2, 2, 80.00);   -- Pedido de João Silva na Mesa 2
+
+-- Seleção de todos os clientes
+SELECT * FROM Clientes;
+
+-- Seleção de todas as mesas
+SELECT * FROM Mesas;
+
+-- Seleção de todos os pedidos
+SELECT * FROM Pedidos;
+
+-- Atualização do telefone de um cliente
+UPDATE Clientes
+SET Telefone = '1111-2222'
+WHERE Nome = 'Maria Souza';
+
+-- Exclusão de um pedido
+DELETE FROM Pedidos
+WHERE ID = 1;  -- Excluir o pedido de ID 1
+
+-- Junção para exibir detalhes dos pedidos com informações de clientes e mesas
+SELECT p.ID AS PedidoID, c.Nome AS Cliente, m.Numero AS Mesa, p.Total
+FROM Pedidos p
+JOIN Clientes c ON p.ClienteID = c.ID
+JOIN Mesas m ON p.MesaID = m.ID;
